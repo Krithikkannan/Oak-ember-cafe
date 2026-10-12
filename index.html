@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Oak & Ember | Independent Café</title>
+  <meta name="description" content="Discover coffee, cakes and cosy moments at The Oak & Ember.">
+  <style>
+    :root {
+      --green: #183b2e;
+      --cream: #f7f3e9;
+      --gold: #c59b54;
+      --ink: #243128;
+      --muted: #69736b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+    }
+    header {
+      background: var(--green);
+      color: white;
+      padding: 18px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .brand { font-size: 1.25rem; letter-spacing: 1px; }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 16px;
+      font: 0.9rem Arial, sans-serif;
+    }
+    .hero {
+      min-height: 440px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 70px 20px;
+      color: white;
+      background:
+        linear-gradient(#10291dc9, #10291dba),
+        url("https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=1600&q=85")
+        center/cover;
+    }
+    .hero-content { max-width: 700px; }
+    .eyebrow {
+      color: #f0d39b;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font: 0.78rem Arial, sans-serif;
+    }
+    h1 { font-size: clamp(2.5rem, 8vw, 4.8rem); margin: 18px 0; }
+    .hero p { font-size: 1.15rem; line-height: 1.7; }
+    .button {
+      display: inline-block;
+      margin-top: 15px;
+      background: var(--gold);
+      color: #17281e;
+      padding: 13px 23px;
+      border-radius: 3px;
+      text-decoration: none;
+      font: bold 0.9rem Arial, sans-serif;
+    }
+    section { padding: 65px 7%; }
+    .section-title { text-align: center; margin-bottom: 30px; }
+    .section-title h2 { font-size: 2.2rem; margin-bottom: 10px; }
+    .section-title p { color: var(--muted); font-family: Arial, sans-serif; }
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      max-width: 1100px;
+      margin: auto;
+    }
+    .menu-card {
+      background: white;
+      border: 1px solid #e5e0d5;
+      border-radius: 7px;
+      overflow: hidden;
+    }
+    .menu-card img {
+      width: 100%;
+      height: 175px;
+      object-fit: cover;
+      background: #e9e3d7;
+    }
+    .menu-info { padding: 18px; }
+    .menu-info h3 { margin: 0 0 8px; font-size: 1.25rem; }
+    .menu-info p {
+      font: 0.92rem/1.6 Arial, sans-serif;
+      color: var(--muted);
+      min-height: 45px;
+    }
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font: bold 1rem Arial, sans-serif;
+    }
+    .category {
+      color: var(--green);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .sold-out { color: #a33b32; font-size: 0.8rem; }
+    .about {
+      background: #eae5d8;
+      text-align: center;
+    }
+    .about p {
+      max-width: 650px;
+      margin: 15px auto;
+      font: 1rem/1.8 Arial, sans-serif;
+      color: #4c584f;
+    }
+    .visit {
+      background: var(--green);
+      color: white;
+      text-align: center;
+    }
+    .visit p { font: 1rem/1.8 Arial, sans-serif; }
+    footer {
+      padding: 22px;
+      text-align: center;
+      color: #d8dfd8;
+      background: #10271e;
+      font: 0.82rem Arial, sans-serif;
+    }
+    .status { text-align: center; color: var(--muted); padding: 20px; }
+    @media (max-width: 500px) {
+      header { justify-content: center; text-align: center; }
+      nav a { margin: 0 7px; }
+      .hero { min-height: 380px; }
+      section { padding: 48px 5%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">🌿 THE OAK &amp; EMBER</div>
+    <nav>
+      <a href="#menu">Menu</a>
+      <a href="#about">Our Story</a>
+      <a href="#visit">Visit Us</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <div class="eyebrow">Your neighbourhood, your little escape</div>
+        <h1>Good coffee.<br>Slow moments.</h1>
+        <p>Thoughtfully made coffee, delicious bakes and a warm welcome in every cup.</p>
+        <a class="button" href="#menu">Explore Our Menu</a>
+      </div>
+    </section>
+
+    <section id="menu">
+      <div class="section-title">
+        <h2>Made with care</h2>
+        <p>Discover a little something for your day.</p>
+      </div>
+      <div id="menu-grid" class="menu-grid">
+        <p class="status">Loading our menu…</p>
+      </div>
+      <p id="menu-status" class="status"></p>
+    </section>
+
+    <section class="about" id="about">
+      <div class="section-title">
+        <h2>A little more than coffee</h2>
+      </div>
+      <p>
+        The Oak &amp; Ember is a cosy neighbourhood café made for good
+        conversations, quiet mornings and freshly prepared favourites.
+        Come in, settle down and make yourself at home.
+      </p>
+    </section>
+
+    <section class="visit" id="visit">
+      <div class="section-title">
+        <h2>Come say hello</h2>
+        <p style="color:#e0e5df">Your next favourite coffee spot awaits.</p>
+      </div>
+      <p>Opening hours: Add your café's real opening hours here.</p>
+      <p>Location: Add your café's real address here.</p>
+      <a class="button" href="mailto:hello@example.com">Contact the café</a>
+    </section>
+  </main>
+
+  <footer>
+    © <span id="year"></span> The Oak &amp; Ember · Demo café website
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from
+      "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot } from
+      "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    // Replace these values with your Firebase web app configuration.
+    const firebaseConfig = {
+      apiKey: "PASTE_API_KEY",
+      authDomain: "PASTE_AUTH_DOMAIN",
+      projectId: "PASTE_PROJECT_ID",
+      storageBucket: "PASTE_STORAGE_BUCKET",
+      messagingSenderId: "PASTE_MESSAGING_SENDER_ID",
+      appId: "PASTE_APP_ID"
+    };
+
+    const grid = document.getElementById("menu-grid");
+    const status = document.getElementById("menu-status");
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    function addText(parent, tag, text, className) {
+      const element = document.createElement(tag);
+      element.textContent = text;
+      if (className) element.className = className;
+      parent.appendChild(element);
+      return element;
+    }
+
+    try {
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      onSnapshot(collection(db, "menu"), (snapshot) => {
+        grid.replaceChildren();
+
+        if (snapshot.empty) {
+          status.textContent = "Our menu is being prepared. Please check back soon.";
+          return;
+        }
+
+        snapshot.forEach((item) => {
+          const data = item.data();
+          if (data.available === false) return;
+
+          const card = document.createElement("article");
+          card.className = "menu-card";
+
+          if (typeof data.image === "string" && data.image.trim()) {
+            const img = document.createElement("img");
+            img.src = data.image;
+            img.alt = typeof data.name === "string" ? data.name : "Cafe menu item";
+            img.loading = "lazy";
+            img.onerror = () => img.remove();
+            card.appendChild(img);
+          }
+
+          const info = document.createElement("div");
+          info.className = "menu-info";
+
+          addText(info, "span", data.category || "Our menu", "category");
+          addText(info, "h3", data.name || "Menu item");
+          addText(info, "p", data.description || "");
+
+          const row = document.createElement("div");
+          row.className = "price-row";
+          addText(row, "span",
+            typeof data.price === "number"
+              ? "£" + data.price.toFixed(2)
+              : "Ask us for the price"
+          );
+          info.appendChild(row);
+          card.appendChild(info);
+          grid.appendChild(card);
+        });
+
+        status.textContent = grid.children.length
+          ? ""
+          : "Our menu is being updated. Please check back soon.";
+      }, (error) => {
+        console.error(error);
+        grid.replaceChildren();
+        status.textContent =
+          "The menu could not load just now. Please try again later.";
+      });
+    } catch (error) {
+      console.error(error);
+      grid.replaceChildren();
+      status.textContent =
+        "Website setup is in progress. Please check back soon.";
+    }
+  </script>
+</body>
+  </html>
+  
