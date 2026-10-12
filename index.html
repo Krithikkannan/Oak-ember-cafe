@@ -238,9 +238,9 @@
         grid.replaceChildren();
 
         if (snapshot.empty) {
-          status.textContent = "Our menu is being prepared. Please check back soon.";
-          return;
-        }
+  status.textContent = "No menu documents found in this Firebase database.";
+  return;
+}
 
         snapshot.forEach((item) => {
           const data = item.data();
