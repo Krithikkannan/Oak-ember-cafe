@@ -238,8 +238,7 @@
         status.textContent = "Documents received: " + snapshot.size;
         grid.replaceChildren();
 
-        if (snapshot.empty) {
-  status.textContent = "No menu documents found in this Firebase database.";
+        if (snapshot.empty) {status.textContent = "Documents received: " + snapshot.size;
   return;
 }
 
