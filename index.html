@@ -235,6 +235,7 @@
       const db = getFirestore(app);
 
       onSnapshot(collection(db, "menu"), (snapshot) => {
+        status.textContent = "Documents received: " + snapshot.size;
         grid.replaceChildren();
 
         if (snapshot.empty) {
