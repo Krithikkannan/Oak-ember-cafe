@@ -35,10 +35,7 @@
       flex-wrap: wrap;
     }
 
-    .brand {
-      font-size: 1.25rem;
-      letter-spacing: 1px;
-    }
+    .brand { font-size: 1.25rem; letter-spacing: 1px; }
 
     nav a {
       color: white;
@@ -74,10 +71,7 @@
       margin: 18px 0;
     }
 
-    .hero p {
-      font-size: 1.15rem;
-      line-height: 1.7;
-    }
+    .hero p { font-size: 1.15rem; line-height: 1.7; }
 
     .button {
       display: inline-block;
@@ -158,11 +152,6 @@
       letter-spacing: 1px;
     }
 
-    .sold-out {
-      color: #a33b32;
-      font-size: 0.8rem;
-    }
-
     .about {
       background: #eae5d8;
       text-align: center;
@@ -205,9 +194,7 @@
       }
 
       nav a { margin: 0 7px; }
-
       .hero { min-height: 380px; }
-
       section { padding: 48px 5%; }
     }
   </style>
@@ -216,7 +203,6 @@
 <body>
   <header>
     <div class="brand">🌿 THE OAK &amp; EMBER</div>
-
     <nav>
       <a href="#menu">Menu</a>
       <a href="#about">Our Story</a>
@@ -241,7 +227,7 @@
       </div>
 
       <div id="menu-grid" class="menu-grid">
-        <p class="status">Loading our menu…</p>
+        <p class="status">Connecting to our menu…</p>
       </div>
 
       <p id="menu-status" class="status" aria-live="polite"></p>
@@ -251,7 +237,6 @@
       <div class="section-title">
         <h2>A little more than coffee</h2>
       </div>
-
       <p>
         The Oak &amp; Ember is a cosy neighbourhood café made for good
         conversations, quiet mornings and freshly prepared favourites.
@@ -264,13 +249,9 @@
         <h2>Come say hello</h2>
         <p style="color:#e0e5df">Your next favourite coffee spot awaits.</p>
       </div>
-
       <p>Opening hours: Add your café's real opening hours here.</p>
       <p>Location: Add your café's real address here.</p>
-
-      <a class="button" href="mailto:hello@example.com">
-        Contact the café
-      </a>
+      <a class="button" href="mailto:hello@example.com">Contact the café</a>
     </section>
   </main>
 
@@ -304,9 +285,9 @@
     document.getElementById("year").textContent =
       new Date().getFullYear();
 
-    function addText(parent, tag, text, className) {
+    function addText(parent, tag, value, className) {
       const element = document.createElement(tag);
-      element.textContent = text;
+      element.textContent = value;
 
       if (className) {
         element.className = className;
@@ -316,57 +297,79 @@
       return element;
     }
 
+    // Supports either uppercase or lowercase Firestore field names.
+    function getField(data, field) {
+      if (data[field] !== undefined) {
+        return data[field];
+      }
+
+      const lower = field.toLowerCase();
+      const upper = field.charAt(0).toUpperCase() + field.slice(1);
+
+      if (data[lower] !== undefined) {
+        return data[lower];
+      }
+
+      return data[upper];
+    }
+
     try {
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
 
-      // IMPORTANT: The collection name must match Firebase exactly.
-      // Your Firestore collection is named "menu" in lowercase.
+      // Collection name must match Firestore exactly: "Menu".
       onSnapshot(
-        collection(db, "menu"),
+        collection(db, "Menu"),
 
         (snapshot) => {
           grid.replaceChildren();
 
-          const availableItems = [];
-
-          snapshot.forEach((item) => {
-            const data = item.data();
-
-            if (data.available === false) {
-              return;
-            }
-
-            availableItems.push(data);
-          });
+          console.log("Firestore collection: Menu");
+          console.log("Documents received:", snapshot.size);
 
           if (snapshot.empty) {
             status.textContent =
-              "No menu documents found. Please check your Firebase menu collection.";
+              "No documents found in the Menu collection. Check the selected Firebase project and database.";
             return;
           }
 
-          if (availableItems.length === 0) {
-            status.textContent =
-              "No menu items are currently available.";
-            return;
-          }
+          let visibleCount = 0;
 
-          availableItems.forEach((data) => {
+          snapshot.forEach((documentSnapshot) => {
+            const data = documentSnapshot.data();
+
+            console.log(
+              "Menu document:",
+              documentSnapshot.id,
+              data
+            );
+
+            const available = getField(data, "available");
+
+            if (available === false) {
+              return;
+            }
+
+            visibleCount++;
+
+            const name = getField(data, "name");
+            const category = getField(data, "category");
+            const description = getField(data, "description");
+            const price = getField(data, "price");
+            const image = getField(data, "image");
+
             const card = document.createElement("article");
             card.className = "menu-card";
 
             if (
-              typeof data.image === "string" &&
-              data.image.trim()
+              typeof image === "string" &&
+              image.trim() !== ""
             ) {
               const img = document.createElement("img");
-
-              img.src = data.image;
-              img.alt = data.name || "Cafe menu item";
+              img.src = image;
+              img.alt = name || "Cafe menu item";
               img.loading = "lazy";
               img.onerror = () => img.remove();
-
               card.appendChild(img);
             }
 
@@ -376,58 +379,60 @@
             addText(
               info,
               "span",
-              data.category || "Our menu",
+              category || "Our menu",
               "category"
             );
 
-            addText(
-              info,
-              "h3",
-              data.name || "Menu item"
-            );
+            addText(info, "h3", name || "Menu item");
 
-            addText(
-              info,
-              "p",
-              data.description || ""
-            );
+            addText(info, "p", description || "");
 
             const row = document.createElement("div");
             row.className = "price-row";
 
-            const price =
-              typeof data.price === "number"
-                ? "£" + data.price.toFixed(2)
-                : "Ask us for the price";
+            let formattedPrice = "Ask us for the price";
 
-            addText(row, "span", price);
+            if (typeof price === "number") {
+              formattedPrice = "£" + price.toFixed(2);
+            } else if (
+              typeof price === "string" &&
+              price.trim() !== ""
+            ) {
+              formattedPrice = price;
+            }
+
+            addText(row, "span", formattedPrice);
 
             info.appendChild(row);
             card.appendChild(info);
             grid.appendChild(card);
           });
 
-          status.textContent =
-            "Showing " + availableItems.length + " menu item(s).";
+          if (visibleCount === 0) {
+            status.textContent =
+              "No menu items are currently available.";
+          } else {
+            status.textContent =
+              "Showing " + visibleCount + " menu item(s).";
+          }
         },
 
         (error) => {
-          console.error("Firestore menu error:", error);
+          console.error("Firestore error:", error);
 
           grid.replaceChildren();
 
           status.textContent =
-            "The menu could not load. Please check the database configuration and Firestore rules.";
+            "Unable to read the menu. Check Firestore permissions and the database configuration.";
         }
       );
-
     } catch (error) {
-      console.error("Firebase initialization error:", error);
+      console.error("Firebase setup error:", error);
 
       grid.replaceChildren();
 
       status.textContent =
-        "Website setup error. Please check your Firebase configuration.";
+        "Firebase setup failed. Check the configuration.";
     }
   </script>
 </body>
