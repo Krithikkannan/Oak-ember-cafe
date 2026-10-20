@@ -417,14 +417,11 @@
           }
         },
 
-        (error) => {
-          console.error("Firestore error:", error);
+        console.error("Firestore error code:", error.code);
+console.error("Firestore error message:", error.message);
 
-          grid.replaceChildren();
-
-          status.textContent =
-            "Unable to read the menu. Check Firestore permissions and the database configuration.";
-        }
+status.textContent =
+  "Firestore error: " + error.code;
       );
     } catch (error) {
       console.error("Firebase setup error:", error);
